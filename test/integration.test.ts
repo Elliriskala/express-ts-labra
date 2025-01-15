@@ -1,32 +1,34 @@
 import app from '../src/app';
 import request from 'supertest';
-// import {Article, Author} from '../src/types/LocalTypes';
-// import randomstring from 'randomstring';
+import {Article, Author} from '../src/types/LocalTypes';
+import randomstring from 'randomstring';
 
 // test that server is running
 describe('GET /', () => {
   it('should return 200 OK', async () => {
-    await request(app).get('/').expect(200);
+    await request(app).get('/api/v1').expect(200);
   });
 });
 
-/* TODO: Remove this line to start the integration tests
 // Create new article for testing
 const article: Article = {
-  id: 1, // some random id
-  title: 'Test Article',
-  description: 'This is the content of article 1',
-  author_id: 1, // some random author id
+  id: 1,
+  title: 'Article 1',
+  description: 'This is the first article',
+  author_id: 1,
+  author_name: 'Pekka',
+  author_email: 'pekka.koistinen@metropolia.fi',
 };
 
 // Create new author for testing
 const author: Author = {
-  id: 1,
-  name: 'Test Author',
-  email: randomstring.generate(7) + '@metropolia.fi',
+  id: 4,
+  name: 'Test User',
+  email: 'kissa@metropolia.fi',
 };
 
 // integration tests to test the endpoints in src/api/v1/routes/authorRouter.ts
+
 describe('Testing authors endpoint', () => {
   // Test POST /authors
   it('POST /authors should create a new author', async () => {
@@ -39,8 +41,6 @@ describe('Testing authors endpoint', () => {
       expect(newAuthor.name).toBe(author.name);
       expect(newAuthor.email).toBe(author.email);
       author.id = newAuthor.id;
-      // Set author_id for article here after we have the actual ID
-      article.author_id = author.id;
     } catch (error) {
       console.error('Create author test failed:', error);
       throw error;
@@ -73,6 +73,27 @@ describe('Testing authors endpoint', () => {
       expect(foundAuthor).toEqual(author);
     } catch (error) {
       console.error('Get author by id test failed:', error);
+      throw error;
+    }
+  });
+
+  // Test GET /articles/:id
+  it('GET /articles/:id should return the article', async () => {
+    try {
+      const response = await request(app)
+        .get(`/api/v1/articles/${article.id}`)
+        .expect(200);
+      const foundArticle = response.body as Article;
+      expect(foundArticle).toEqual({
+        id: article.id,
+        title: article.title,
+        description: article.description,
+        author_id: article.author_id,
+        author_name: article.author_name,
+        author_email: article.author_email,
+      });
+    } catch (error) {
+      console.error('Get article by id test failed:', error);
       throw error;
     }
   });
@@ -149,20 +170,6 @@ describe('Testing articles endpoint', () => {
     }
   });
 
-  // Test GET /articles/:id
-  it('GET /articles/:id should return the article', async () => {
-    try {
-      const response = await request(app)
-        .get(`/api/v1/articles/${article.id}`)
-        .expect(200);
-      const foundArticle = response.body as Article;
-      expect(foundArticle).toEqual(article);
-    } catch (error) {
-      console.error('Get article by id test failed:', error);
-      throw error;
-    }
-  });
-
   // Test PUT /articles/:id
   it('PUT /articles/:id should update the article', async () => {
     try {
@@ -170,6 +177,8 @@ describe('Testing articles endpoint', () => {
         title: 'Updated Title',
         description: 'Updated Description',
         author_id: article.author_id,
+        author_name: article.author_name,
+        author_email: article.author_email,
       };
       const response = await request(app)
         .put(`/api/v1/articles/${article.id}`)
@@ -205,4 +214,3 @@ describe('Delete test data', () => {
     await request(app).delete(`/api/v1/authors/${author.id}`).expect(204);
   });
 });
-TODO: Remove this line to start the integration tests */

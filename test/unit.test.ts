@@ -9,9 +9,12 @@ import {Article} from '../src/types/LocalTypes';
 
 // Create new article for testing
 const testArticle: Article = {
-  id: 0, // This will be updated after creation
+  id: 1, // some random id
   title: 'Test Article',
   description: 'This is the content of article 1',
+  author_id: 1, // some random author id
+  author_email: "pekka.koistinen@metropolia.fi",
+  author_name: "Pekka",
 };
 
 // Unit tests to test functions in src/api/models/articleModel.ts
@@ -25,7 +28,7 @@ describe('Article functions', () => {
       expect(newArticle.description).toBe(testArticle.description);
       testArticle.id = newArticle.id; // Update the reference article id
     } catch (error) {
-      fail(
+      throw new Error(
         `Failed to create article: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
     }
@@ -38,7 +41,7 @@ describe('Article functions', () => {
       expect(foundArticle).toBeDefined();
       expect(foundArticle).toEqual(testArticle);
     } catch (error) {
-      fail(
+      throw new Error(
         `Failed to get article: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
     }
@@ -55,7 +58,7 @@ describe('Article functions', () => {
         expect(article).toHaveProperty('description', expect.any(String));
       });
     } catch (error) {
-      fail(
+      throw new Error(
         `Failed to get all articles: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
     }
@@ -68,13 +71,14 @@ describe('Article functions', () => {
         testArticle.id,
         'Updated Title',
         'Updated Description',
+        testArticle.author_id,
       );
       expect(updatedArticle).toBeDefined();
       expect(updatedArticle.title).toBe('Updated Title');
       expect(updatedArticle.description).toBe('Updated Description');
       expect(updatedArticle.id).toBe(testArticle.id);
     } catch (error) {
-      fail(
+      throw new Error(
         `Failed to update article: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
     }
@@ -83,10 +87,10 @@ describe('Article functions', () => {
   // Test deleteArticle function
   it('deleteArticle should delete the article', () => {
     try {
-      deleteArticle(testArticle.id);
+      deleteArticle(testArticle.id, testArticle.author_id);
       expect(() => getArticle(testArticle.id)).toThrow();
     } catch (error) {
-      fail(
+      throw new Error(
         `Failed to delete article: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
     }

@@ -1,5 +1,6 @@
+/* eslint-disable no-undef */
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
-export default {
+module.exports = {
   testEnvironment: "node",
   transform: {
     "^.+.tsx?$": ["ts-jest",{}],

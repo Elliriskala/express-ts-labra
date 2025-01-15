@@ -3,24 +3,47 @@ POST http://localhost:3000/api/v1/articles
 Content-Type: application/json
 
 {
-    "title": "Test Article",
-    "description": "This is the content of article 1"
+    "title": "Article 4",
+    "description": "This is the fourth article",
 }
 
 ### Get all articles
 GET http://localhost:3000/api/v1/articles
 
 ### Get article by id (replace :id with actual id)
-GET http://localhost:3000/api/v1/articles/:id
+GET http://localhost:3000/api/v1/articles/1
 
 ### Update article (replace :id with actual id)
-PUT http://localhost:3000/api/v1/articles/:id
+PUT http://localhost:3000/api/v1/articles/1
 Content-Type: application/json
 
 {
     "title": "Updated Title",
-    "description": "Updated Description"
+    "description": "Updated Description",
+    "author_id": 1
 }
 
 ### Delete article (replace :id with actual id)
 DELETE http://localhost:3000/api/v1/articles/:id
+
+### delete author
+
+DELETE http://localhost:3000/api/v1/authors/1
+
+### create author
+
+POST http://localhost:3000/api/v1/authors
+Content-Type: application/json
+
+{
+    "name": "Author2",
+    "email": "popokissa@metropolia.fi"
+}
+
+### get all authors
+
+GET http://localhost:3000/api/v1/authors
+
+### get author by id
+
+GET http://localhost:3000/api/v1/authors/1
