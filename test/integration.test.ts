@@ -10,21 +10,22 @@ describe('GET /', () => {
   });
 });
 
+
 // Create new article for testing
 const article: Article = {
-  id: 1,
-  title: 'Article 1',
-  description: 'This is the first article',
-  author_id: 1,
-  author_name: 'Pekka',
-  author_email: 'pekka.koistinen@metropolia.fi',
+  id: 1, // some random id
+  title: 'Test Article',
+  description: 'This is the content of article 1',
+  author_id: 1, // some random author id
+  author_name: 'Test Author', // some random author name
+  author_email: 'test@metropolia.fi', // some random author email
 };
 
 // Create new author for testing
 const author: Author = {
-  id: 4,
-  name: 'Test User',
-  email: 'kissa@metropolia.fi',
+  id: 1,
+  name: 'Test Author',
+  email: randomstring.generate(7) + '@metropolia.fi',
 };
 
 // integration tests to test the endpoints in src/api/v1/routes/authorRouter.ts
@@ -41,6 +42,8 @@ describe('Testing authors endpoint', () => {
       expect(newAuthor.name).toBe(author.name);
       expect(newAuthor.email).toBe(author.email);
       author.id = newAuthor.id;
+      // Set author_id for article here after we have the actual ID
+      article.author_id = author.id;
     } catch (error) {
       console.error('Create author test failed:', error);
       throw error;
@@ -73,27 +76,6 @@ describe('Testing authors endpoint', () => {
       expect(foundAuthor).toEqual(author);
     } catch (error) {
       console.error('Get author by id test failed:', error);
-      throw error;
-    }
-  });
-
-  // Test GET /articles/:id
-  it('GET /articles/:id should return the article', async () => {
-    try {
-      const response = await request(app)
-        .get(`/api/v1/articles/${article.id}`)
-        .expect(200);
-      const foundArticle = response.body as Article;
-      expect(foundArticle).toEqual({
-        id: article.id,
-        title: article.title,
-        description: article.description,
-        author_id: article.author_id,
-        author_name: article.author_name,
-        author_email: article.author_email,
-      });
-    } catch (error) {
-      console.error('Get article by id test failed:', error);
       throw error;
     }
   });
@@ -132,6 +114,9 @@ describe('Testing articles endpoint', () => {
       expect(newArticle.title).toBe(article.title);
       expect(newArticle.description).toBe(article.description);
       article.id = newArticle.id;
+      article.author_id = newArticle.author_id;
+      article.author_name = newArticle.author_name;
+      article.author_email = newArticle.author_email;
     } catch (error) {
       console.error('Create article test failed:', error);
       throw error;
@@ -166,6 +151,20 @@ describe('Testing articles endpoint', () => {
       }
     } catch (error) {
       console.error('Get articles test failed:', error);
+      throw error;
+    }
+  });
+
+  // Test GET /articles/:id
+  it('GET /articles/:id should return the article', async () => {
+    try {
+      const response = await request(app)
+        .get(`/api/v1/articles/${article.id}`)
+        .expect(200);
+      const foundArticle = response.body as Article;
+      expect(foundArticle).toEqual(article);
+    } catch (error) {
+      console.error('Get article by id test failed:', error);
       throw error;
     }
   });
